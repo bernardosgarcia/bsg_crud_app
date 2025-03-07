@@ -1,0 +1,46 @@
+# Visual Studio
+.vs/
+
+# Build
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Dependencies
+packages/
+!packages/repositories.config
+
+# ASP.NET Core environment
+appsettings*.json
+secrets.json
+
+# IDE Configurations
+*.csproj.user
+*.dbmdl
+*.jfm
+
+# Mac OS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Node.js dependencies
+node_modules/
+
+# Publish artifacts
+publish/
+out/
+
+# JetBrains Rider
+.idea/
+*.sln.iml

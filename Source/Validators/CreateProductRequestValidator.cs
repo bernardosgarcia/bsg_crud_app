@@ -21,8 +21,6 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
             .WithMessage("Name cannot be null or empty");
 
         RuleFor(t => t.Price)
-            .NotEmpty()
-            .NotNull()
             .GreaterThan(0)
             .WithMessage("Price must be greater than zero");
     }

@@ -1,5 +1,9 @@
 using bsg_crud_app.Context;
 using bsg_crud_app.Migrations;
+using bsg_crud_app.Repositories.Implementations;
+using bsg_crud_app.Repositories.Interfaces;
+using bsg_crud_app.Services.Implementations;
+using bsg_crud_app.Services.Interfaces;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +21,9 @@ builder.Services.AddFluentMigratorCore()
         .AddPostgres()
         .WithGlobalConnectionString(connectionString)
         .ScanIn(typeof(InitialMigration).Assembly).For.Migrations());
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 

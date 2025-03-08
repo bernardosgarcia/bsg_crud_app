@@ -23,14 +23,14 @@ public class ProductRepositoryTests
     }
 
     /// <summary>
-    /// Test to add a new product at db
+    /// Test to add a new product
     /// </summary>
     [Fact]
     public async Task Add_Should_Add_Entity()
     {
         await using var context = new CrudAppContext(_options);
         var repository = new ProductRepository(context);
-        var product = new ProductModel { Id = 1, Name = "Teste", Price = 10 };
+        var product = new ProductModel { Name = "Teste", Price = 10 };
 
         await repository.AddAsync(product);
         await context.SaveChangesAsync();
@@ -39,5 +39,35 @@ public class ProductRepositoryTests
         Assert.NotNull(result);
         Assert.Equal("Teste", result.Name);
 
+    }
+
+    /// <summary>
+    /// Test to verify update repository method
+    /// </summary>
+    [Fact]
+    public async Task Update_Should_Update_Entity()
+    {
+        await using var context = new CrudAppContext(_options);
+        var repository = new ProductRepository(context);
+
+        var product = new ProductModel { Name = "Teste", Price = 10 };
+        await repository.AddAsync(product);
+        await repository.SaveChangesAsync();
+
+        var productId = product.Id;
+
+        var existingProduct = await context.ProductModels.FindAsync(productId);
+        Assert.NotNull(existingProduct);
+
+        var oldName = existingProduct.Name;
+
+        existingProduct.Name = "Teste 2";
+        repository.Update(existingProduct);
+        await repository.SaveChangesAsync();
+
+        var updatedProduct = await context.ProductModels.FindAsync(productId);
+        Assert.NotNull(updatedProduct);
+        Assert.NotEqual(oldName, updatedProduct.Name);
+        Assert.Equal("Teste 2", updatedProduct.Name);
     }
 }

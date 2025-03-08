@@ -8,7 +8,7 @@ namespace bsg_crud_app.Dtos;
 /// <param name="Price"></param>
 public record CreateProductRequestDto(
     string Name,
-    string Description,
+    string? Description,
     decimal Price
 );
 
@@ -36,8 +36,8 @@ public record UpdateProductRequestDto(
 public record ProductResponseDto(
     int Id,
     string Name,
-    string Description,
+    string? Description,
     decimal Price,
     DateTime CreatedAt,
-    DateTime UpdatedAt
+    DateTime? UpdatedAt
 );

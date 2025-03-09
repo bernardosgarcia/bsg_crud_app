@@ -18,7 +18,25 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
             .NotEmpty()
             .NotNull()
             .MaximumLength(100)
-            .WithMessage("Name cannot be null or empty");
+            .WithMessage("Name cannot be null, empty or greater than 100 characters.");
+
+        RuleFor(t => t.Price)
+            .GreaterThan(0)
+            .WithMessage("Price must be greater than zero");
+    }
+}
+
+public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequestDto>
+{
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    public UpdateProductRequestValidator()
+    {
+        RuleFor(t => t.Name)
+            .NotEmpty()
+            .MaximumLength(100)
+            .WithMessage("Name cannot be empty or greater than 100 characters");
 
         RuleFor(t => t.Price)
             .GreaterThan(0)

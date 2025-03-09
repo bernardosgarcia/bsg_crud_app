@@ -18,7 +18,7 @@ public class ProductValidatorTests
     {
         _mockRepository = new Mock<IProductRepository>();
         _mockValidator = new Mock<FluentValidation.IValidator<CreateProductRequestDto>>();
-        _productService = new ProductService(_mockRepository.Object, _mockValidator.Object);
+        _productService = new ProductService(_mockRepository.Object);
     }
 
     [Fact]

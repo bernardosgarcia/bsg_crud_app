@@ -12,24 +12,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace bsg_crud_app.Services.Implementations;
 
 /// <summary>
-///
+/// Product service to CRUD
 /// </summary>
 public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
-    private readonly IValidator<CreateProductRequestDto> _validator;
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="productRepository"></param>
-    /// <param name="validator"></param>
     public ProductService(
-        IProductRepository productRepository,
-        IValidator<CreateProductRequestDto> validator)
+        IProductRepository productRepository)
     {
         _productRepository = productRepository;
-        _validator = validator;
     }
 
     /// <summary>
@@ -39,38 +35,90 @@ public class ProductService : IProductService
     /// <returns></returns>
     public async Task<GenericResponse<ProductResponseDto>> Create(CreateProductRequestDto createProductRequestDto)
     {
-        var validationResult = await _validator.ValidateAsync(createProductRequestDto);
+        var createProductValidator = new CreateProductRequestValidator();
+        var validationResult = await createProductValidator.ValidateAsync(createProductRequestDto);
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
             return new GenericResponse<ProductResponseDto>(HttpStatusCode.BadRequest, errors);
         }
 
-        var productEntity = createProductRequestDto.toEntity();
+        var productEntity = createProductRequestDto.ToEntity();
 
         var responseProductEntity = await _productRepository.AddAsync(productEntity);
         await _productRepository.SaveChangesAsync();
 
-        return new GenericResponse<ProductResponseDto>(HttpStatusCode.OK, responseProductEntity.toDto());
+        var responseProductDto = responseProductEntity.ToDto();
+        return new GenericResponse<ProductResponseDto>(HttpStatusCode.OK, responseProductDto);
     }
 
+    /// <summary>
+    /// Read all existing products
+    /// </summary>
+    /// <returns></returns>
     public async Task<List<ProductResponseDto>> ReadAll()
     {
-        throw new NotImplementedException();
+        var productEntities = await _productRepository.GetAllAsync();
+
+        var productResponseDtos = productEntities.Select(productEntity
+            => productEntity.ToDto()).ToList();
+        return productResponseDtos;
     }
 
+    /// <summary>
+    /// Read existing product by id
+    /// </summary>
+    /// <param name="productId"></param>
+    /// <returns></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
     public async Task<ProductResponseDto> ReadById(int productId)
     {
-        throw new NotImplementedException();
+        var productEntity = await _productRepository.GetByIdAsync(productId);
+        if (productEntity == null) throw new KeyNotFoundException();
+
+        var productResponseDto = productEntity.ToDto();
+        return productResponseDto;
     }
 
-    public async Task<ProductResponseDto> Update(int productId, UpdateProductRequestDto updateProductRequestDto)
+    /// <summary>
+    /// Compare old values and update existing product
+    /// </summary>
+    /// <param name="productId"></param>
+    /// <param name="updateProductRequestDto"></param>
+    /// <returns></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
+    public async Task<GenericResponse<ProductResponseDto>> Update(int productId, UpdateProductRequestDto updateProductRequestDto)
     {
-        throw new NotImplementedException();
+        var updateProductValidator = new UpdateProductRequestValidator();
+        var validationResult = await updateProductValidator.ValidateAsync(updateProductRequestDto);
+        if (!validationResult.IsValid)
+        {
+            var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+            return new GenericResponse<ProductResponseDto>(HttpStatusCode.BadRequest, errors);
+        }
+
+        var productEntity = await _productRepository.GetByIdAsync(productId);
+        if (productEntity == null) throw new KeyNotFoundException();
+        productEntity.Mapper(updateProductRequestDto);
+
+        _productRepository.Update(productEntity);
+        await _productRepository.SaveChangesAsync();
+
+        var productResponseDto = productEntity.ToDto();
+        return new GenericResponse<ProductResponseDto>(HttpStatusCode.OK, productResponseDto);
     }
 
-    public async Task<ProductResponseDto> Delete(int productId)
+    /// <summary>
+    /// Delete existing product by id
+    /// </summary>
+    /// <param name="productId"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public async Task<GenericResponse<string>> Delete(int productId)
     {
-        throw new NotImplementedException();
+        _productRepository.Remove(productId);
+        await _productRepository.SaveChangesAsync();
+
+        return new GenericResponse<string>(HttpStatusCode.OK, "Resource deleted successfully.");
     }
 }

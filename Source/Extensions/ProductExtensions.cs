@@ -13,12 +13,11 @@ public static class ProductExtensions
     /// </summary>
     /// <param name="createProductRequestDto"></param>
     /// <returns></returns>
-    public static ProductModel toEntity(this CreateProductRequestDto createProductRequestDto) => new()
+    public static ProductModel ToEntity(this CreateProductRequestDto createProductRequestDto) => new()
     {
         Name = createProductRequestDto.Name,
         Description = createProductRequestDto.Description,
-        Price = createProductRequestDto.Price,
-        CreatedAt = null
+        Price = createProductRequestDto.Price
     };
 
     /// <summary>
@@ -26,13 +25,44 @@ public static class ProductExtensions
     /// </summary>
     /// <param name="productModel"></param>
     /// <returns></returns>
-    public static ProductResponseDto toDto(this ProductModel productModel) => new
+    public static ProductResponseDto ToDto(this ProductModel productModel) => new
     (
         productModel.Id,
         productModel.Name,
         productModel.Description,
         productModel.Price,
-        productModel.CreatedAt ?? default,
+        productModel.CreatedAt,
         productModel.UpdatedAt
     );
+
+    /// <summary>
+    /// Map entity and update request dto to patch method
+    /// </summary>
+    /// <param name="productEntity"></param>
+    /// <param name="updateProductRequestDto"></param>
+    public static void Mapper(this ProductModel productEntity, UpdateProductRequestDto updateProductRequestDto)
+    {
+        var updated = false;
+
+        if (updateProductRequestDto.Name != null && productEntity.Name != updateProductRequestDto.Name)
+        {
+            productEntity.Name = updateProductRequestDto.Name;
+            updated = true;
+        }
+        if (updateProductRequestDto.Description != null && productEntity.Description != updateProductRequestDto.Description)
+        {
+            productEntity.Description = updateProductRequestDto.Description;
+            updated = true;
+        }
+        if (updateProductRequestDto.Price != null && productEntity.Price != updateProductRequestDto.Price.Value)
+        {
+            productEntity.Price = updateProductRequestDto.Price.Value;
+            updated = true;
+        }
+
+        if (updated)
+        {
+            productEntity.UpdatedAt = DateTime.UtcNow;
+        }
+    }
 }

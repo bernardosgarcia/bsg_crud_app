@@ -9,6 +9,9 @@ using Moq;
 
 namespace Tests.Products;
 
+/// <summary>
+/// Test class to product service methods
+/// </summary>
 public class ProductServiceTests
 {
     private readonly Mock<IProductRepository> _mockRepository;
@@ -19,11 +22,11 @@ public class ProductServiceTests
     {
         _mockRepository = new Mock<IProductRepository>();
         _mockValidator = new Mock<IValidator<CreateProductRequestDto>>();
-        _productService = new ProductService(_mockRepository.Object, _mockValidator.Object);
+        _productService = new ProductService(_mockRepository.Object);
     }
 
     [Fact]
-    public async Task AddProduct_Should_Call_Repository_Add()
+    public async Task Add_Product_Should_Call_Repository_Add()
     {
         var createProductRequestDto = new CreateProductRequestDto("", null, 10);
 

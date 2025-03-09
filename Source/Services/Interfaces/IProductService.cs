@@ -8,6 +8,6 @@ public interface IProductService
     Task<GenericResponse<ProductResponseDto>> Create(CreateProductRequestDto createProductRequestDto);
     Task<List<ProductResponseDto>> ReadAll();
     Task<ProductResponseDto> ReadById(int productId);
-    Task<ProductResponseDto> Update(int productId, UpdateProductRequestDto updateProductRequestDto);
-    Task<ProductResponseDto> Delete(int productId);
+    Task<GenericResponse<ProductResponseDto>> Update(int productId, UpdateProductRequestDto updateProductRequestDto);
+    Task<GenericResponse<string>> Delete(int productId);
 }

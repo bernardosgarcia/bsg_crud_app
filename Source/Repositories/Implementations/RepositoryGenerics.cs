@@ -33,10 +33,6 @@ public class RepositoryGenerics<T> : IRepositoryGenerics<T> where T : class
     public async Task<List<T>> GetAllAsync()
     {
         var response = await _crudAppContext.Set<T>().ToListAsync();
-        if (response.Count == 0)
-        {
-            throw new Exception("No records found.");
-        }
         return response;
     }
     
@@ -48,10 +44,6 @@ public class RepositoryGenerics<T> : IRepositoryGenerics<T> where T : class
     public async Task<T?> GetByIdAsync(int id)
     {
         var response = await _crudAppContext.Set<T>().FindAsync(id);
-        if (response == null)
-        {
-            throw new Exception("No record found with the specified ID.");
-        }
         return response;
     }
 
@@ -64,10 +56,9 @@ public class RepositoryGenerics<T> : IRepositoryGenerics<T> where T : class
     public bool Remove(int id)
     {
         var response = GetById(id);
-        if (response == null) throw new Exception("No record found with the specified ID.");
         try
         {
-            _crudAppContext.Set<T>().Remove(response);
+            if (response != null) _crudAppContext.Set<T>().Remove(response);
             return true;
         }
         catch

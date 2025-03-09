@@ -27,4 +27,18 @@ public class GenericResponse<T>
         Errors = errors;
         StatusCode = statusCode;
     }
+
+    /// <summary>
+    /// No Data Constructor
+    /// </summary>
+    /// <param name="statusCode"></param>
+    /// <param name="message"></param>
+    public GenericResponse(HttpStatusCode statusCode, string message)
+    {
+        Success = true;
+        Message = message;
+        Data = default;
+        Errors = null;
+        StatusCode = statusCode;
+    }
 }

@@ -1,19 +1,64 @@
-﻿@{
+﻿@using System.Globalization
+@model System.Collections.Generic.List<bsg_crud_app.Dtos.ProductResponseDto>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="align-items-center">
+    <div class="container mt-5">
+        <h2>Listagem de Produtos</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Description</th>
+                <th>Preço</th>
+                <th>Criado em</th>
+                <th>Última atualização em</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>@product.Price.ToString("C")</td>
+                    <td>@product.CreatedAt.ToString(CultureInfo.CurrentCulture)</td>
+                    <td>@product.UpdatedAt?.ToString()</td>
+                    <td>
+                        <button type="button" class="btn btn-warning btn-sm">Alterar</button>
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="deleteProduct(@product.Id)">Deletar</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        @await Html.PartialAsync("_CreateProduct", new bsg_crud_app.Dtos.CreateProductRequestDto("", null, 0))
+    </div>
 </div>
 
-<div class="product-section">
-    <table>
-        <thead>
-        TESTE
-        </thead>
-        <tbody>
-        TESTE
-        </tbody>
-    </table>
-</div>
+<script>
+    function deleteProduct(productId) {
+        if(confirm('Confirm delete?')) {
+            fetch(`/Product/${productId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if(response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Error to delete product');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+</script>

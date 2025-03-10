@@ -1,13 +1,9 @@
 using System.Net;
 using bsg_crud_app.Dtos;
 using bsg_crud_app.Extensions;
-using bsg_crud_app.Repositories.Implementations;
 using bsg_crud_app.Repositories.Interfaces;
 using bsg_crud_app.Services.Interfaces;
 using bsg_crud_app.Validators;
-using FluentValidation;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace bsg_crud_app.Services.Implementations;
 
@@ -35,7 +31,7 @@ public class ProductService : IProductService
     /// <returns></returns>
     public async Task<GenericResponse<ProductResponseDto>> Create(CreateProductRequestDto createProductRequestDto)
     {
-        var createProductValidator = new CreateProductRequestValidator();
+        var createProductValidator = new CreateProductRequestValidator(_productRepository);
         var validationResult = await createProductValidator.ValidateAsync(createProductRequestDto);
         if (!validationResult.IsValid)
         {
@@ -56,13 +52,13 @@ public class ProductService : IProductService
     /// Read all existing products
     /// </summary>
     /// <returns></returns>
-    public async Task<List<ProductResponseDto>> ReadAll()
+    public async Task<GenericResponse<List<ProductResponseDto>>> ReadAll()
     {
         var productEntities = await _productRepository.GetAllAsync();
 
         var productResponseDtos = productEntities.Select(productEntity
             => productEntity.ToDto()).ToList();
-        return productResponseDtos;
+        return new GenericResponse<List<ProductResponseDto>>(HttpStatusCode.OK, productResponseDtos);
     }
 
     /// <summary>
@@ -71,13 +67,13 @@ public class ProductService : IProductService
     /// <param name="productId"></param>
     /// <returns></returns>
     /// <exception cref="KeyNotFoundException"></exception>
-    public async Task<ProductResponseDto> ReadById(int productId)
+    public async Task<GenericResponse<ProductResponseDto>> ReadById(int productId)
     {
         var productEntity = await _productRepository.GetByIdAsync(productId);
         if (productEntity == null) throw new KeyNotFoundException();
 
         var productResponseDto = productEntity.ToDto();
-        return productResponseDto;
+        return new GenericResponse<ProductResponseDto>(HttpStatusCode.OK, productResponseDto);
     }
 
     /// <summary>

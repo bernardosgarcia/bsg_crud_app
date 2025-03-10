@@ -7,7 +7,7 @@ public class InitialMigration : Migration
 {
     public override void Up()
     {
-        Create.Table("Products")
+        Create.Table("products")
             .WithColumn("Id").AsInt32().PrimaryKey().Identity()
             .WithColumn("Name").AsString(100).NotNullable().Unique()
             .WithColumn("Description").AsString(255).Nullable()
@@ -17,13 +17,13 @@ public class InitialMigration : Migration
             .WithColumn("UpdatedAt").AsCustom("TIMESTAMPTZ").Nullable();
 
         Execute.Sql(@"
-            ALTER TABLE ""Products""
+            ALTER TABLE ""products""
             ALTER COLUMN ""CreatedAt"" SET DEFAULT CURRENT_TIMESTAMP;
         ");
     }
 
     public override void Down()
     {
-        Delete.Table("Products");
+        Delete.Table("products");
     }
 }

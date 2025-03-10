@@ -8,4 +8,11 @@ public class CrudAppContext : DbContext
     public CrudAppContext(DbContextOptions<CrudAppContext> options) : base(options) { }
 
     public DbSet<ProductModel> ProductModels { get; set; }
+
+    // protected override void OnModelCreating(ModelBuilder modelBuilder)
+    // {
+    //
+    //     base.OnModelCreating(modelBuilder);
+    // }
+
 }

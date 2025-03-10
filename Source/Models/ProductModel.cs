@@ -1,5 +1,8 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace bsg_crud_app.Models;
 
+[Table("products")]
 public class ProductModel
 {
     public int Id { get; set; }

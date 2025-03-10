@@ -1,4 +1,5 @@
 using bsg_crud_app.Context;
+using bsg_crud_app.Exceptions;
 using bsg_crud_app.Migrations;
 using bsg_crud_app.Repositories.Implementations;
 using bsg_crud_app.Repositories.Interfaces;
@@ -6,10 +7,17 @@ using bsg_crud_app.Services.Implementations;
 using bsg_crud_app.Services.Interfaces;
 using FluentMigrator.Runner;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Minha API", Version = "v1" });
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -39,14 +47,22 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
+    });
 }
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.MapGet("/", () => "API");
 
 app.MapControllerRoute(
     name: "default",

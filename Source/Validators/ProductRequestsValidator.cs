@@ -1,4 +1,5 @@
 using bsg_crud_app.Dtos;
+using bsg_crud_app.Repositories.Interfaces;
 using FluentValidation;
 
 namespace bsg_crud_app.Validators;
@@ -12,13 +13,17 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
     /// <summary>
     /// Constructor
     /// </summary>
-    public CreateProductRequestValidator()
+    public CreateProductRequestValidator(IProductRepository productRepository)
     {
         RuleFor(t => t.Name)
-            .NotEmpty()
-            .NotNull()
-            .MaximumLength(100)
-            .WithMessage("Name cannot be null, empty or greater than 100 characters.");
+            .NotEmpty().NotNull().WithMessage("Product name cannot be empty or null")
+            .MaximumLength(100).WithMessage("Product name cannot be greater than 100 characters")
+            // ReSharper disable once UnusedParameter.Local
+            .MustAsync(async (name, cancellation) =>
+            {
+                var response = await productRepository.GetByNameAsync(name);
+                return response == null;
+            }).WithMessage("A product with that name already exists");
 
         RuleFor(t => t.Price)
             .GreaterThan(0)
@@ -34,12 +39,10 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
     public UpdateProductRequestValidator()
     {
         RuleFor(t => t.Name)
-            .NotEmpty()
-            .MaximumLength(100)
-            .WithMessage("Name cannot be empty or greater than 100 characters");
+            .NotEmpty().WithMessage("Product name cannot be empty")
+            .MaximumLength(100).WithMessage("Product name cannot be greater than 100 characters");
 
         RuleFor(t => t.Price)
-            .GreaterThan(0)
-            .WithMessage("Price must be greater than zero");
+            .GreaterThan(0).WithMessage("Price must be greater than zero");
     }
 }

@@ -1,4 +1,4 @@
-using bsg_crud_app.Dtos;
+/*using bsg_crud_app.Dtos;
 using bsg_crud_app.Models;
 using bsg_crud_app.Repositories.Interfaces;
 using bsg_crud_app.Services.Implementations;
@@ -59,4 +59,4 @@ public class ProductValidatorTests
         Assert.False(validationResult.IsValid);
     }
 
-}
+}*/

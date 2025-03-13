@@ -1,5 +1,4 @@
 using bsg_crud_app.Dtos;
-using bsg_crud_app.Extensions;
 using bsg_crud_app.Models;
 using bsg_crud_app.Repositories.Interfaces;
 using bsg_crud_app.Services.Implementations;
@@ -15,7 +14,9 @@ namespace Tests.Products;
 public class ProductServiceTests
 {
     private readonly Mock<IProductRepository> _mockRepository;
+
     private readonly Mock<IValidator<CreateProductRequestDto>> _mockValidator;
+
     private readonly ProductService _productService;
 
     public ProductServiceTests()

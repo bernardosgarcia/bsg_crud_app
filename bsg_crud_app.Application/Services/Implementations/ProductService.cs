@@ -1,5 +1,6 @@
 using System.Net;
 using bsg_crud_app.Application.Dtos;
+using bsg_crud_app.Application.Extensions;
 using bsg_crud_app.Application.Services.Interfaces;
 using bsg_crud_app.Application.Validators;
 using bsg_crud_app.Domain.Interfaces;

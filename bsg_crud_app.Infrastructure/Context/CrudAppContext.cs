@@ -17,7 +17,7 @@ public class CrudAppContext : DbContext
     /// <summary>
     /// Table "products"
     /// </summary>
-    public DbSet<ProductEntity> ProductModels { get; init; }
+    public DbSet<ProductEntity> ProductEntities { get; init; }
 
     // protected override void OnModelCreating(ModelBuilder modelBuilder)
     // {

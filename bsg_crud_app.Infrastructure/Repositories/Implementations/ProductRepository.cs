@@ -16,6 +16,6 @@ public class ProductRepository : RepositoryGenerics<ProductEntity>, IProductRepo
 
     public async Task<ProductEntity?> GetByNameAsync(string productName)
     {
-        return await _crudAppContext.ProductModels.FirstOrDefaultAsync(y => y.Name == productName);
+        return await _crudAppContext.ProductEntities.FirstOrDefaultAsync(y => y.Name == productName);
     }
 }

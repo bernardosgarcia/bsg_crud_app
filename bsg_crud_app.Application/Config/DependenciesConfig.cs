@@ -19,7 +19,7 @@ public static class DependenciesConfig
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddInfrastructureConfigs
+        //services.AddInfrastructureConfigs();
         services.AddDependenciesLifeCycle();
     }
 

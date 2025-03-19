@@ -1,6 +1,5 @@
 using bsg_crud_app.Application.Services.Implementations;
 using bsg_crud_app.Application.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace bsg_crud_app.Application.Config;
@@ -14,10 +13,7 @@ public static class DependenciesConfig
     /// Configure infrastructure and application services
     /// </summary>
     /// <param name="services"></param>
-    /// <param name="configuration"></param>
-    public static void AddApplicationServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static void AddApplicationServices(this IServiceCollection services)
     {
         //services.AddInfrastructureConfigs();
         services.AddDependenciesLifeCycle();

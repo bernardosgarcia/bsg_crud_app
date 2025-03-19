@@ -1,5 +1,6 @@
 using System.Text.Json;
 using bsg_crud_app.Application.Config;
+using bsg_crud_app.Infrastructure.Config;
 using Microsoft.OpenApi.Models;
 
 namespace bsg_crud_app.Api.Config;
@@ -19,6 +20,8 @@ public static class ServiceConfig
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddApplicationServices();
+
         services.AddHttpContextAccessor();
 
         //Add controllers that expect to receive and send json with camelCase
@@ -32,7 +35,9 @@ public static class ServiceConfig
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Minha API", Version = "v1" });
         });
+
         services.AddCustomCors();
-        services.AddApplicationServices(configuration);
+
+        services.AddInfrastructureConfigs(configuration);
     }
 }

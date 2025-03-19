@@ -19,6 +19,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\bsg_crud_app.Application\bsg_crud_app.Application.csproj" />
+      <ProjectReference Include="..\bsg_crud_app.Infrastructure\bsg_crud_app.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

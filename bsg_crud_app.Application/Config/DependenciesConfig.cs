@@ -10,22 +10,12 @@ namespace bsg_crud_app.Application.Config;
 public static class DependenciesConfig
 {
     /// <summary>
-    /// Configure infrastructure and application services
+    /// Configure life cycle interfaces and implementations
     /// </summary>
     /// <param name="services"></param>
     public static void AddApplicationServices(this IServiceCollection services)
     {
-        //services.AddInfrastructureConfigs();
-        services.AddDependenciesLifeCycle();
+        services.AddScoped<IProductService, ProductService>();
     }
 
-    /// <summary>
-    /// Configure life cycle interfaces and implementations
-    /// </summary>
-    /// <param name="services"></param>
-    private static void AddDependenciesLifeCycle(this IServiceCollection services)
-    {
-        services
-            .AddScoped<IProductService, ProductService>();
-    }
 }

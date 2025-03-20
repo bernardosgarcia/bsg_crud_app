@@ -1,7 +1,7 @@
-/*using bsg_crud_app.Dtos;
-using bsg_crud_app.Models;
-using bsg_crud_app.Repositories.Interfaces;
-using bsg_crud_app.Services.Implementations;
+using bsg_crud_app.Application.Services.Implementations;
+using bsg_crud_app.Domain.Entities;
+using bsg_crud_app.Domain.Interfaces;
+using bsg_crud_app.Dtos;
 using FluentValidation;
 using FluentValidation.Results;
 using Moq;
@@ -26,13 +26,16 @@ public class ProductServiceTests
         _productService = new ProductService(_mockRepository.Object);
     }
 
+    /// <summary>
+    /// Test if the product was added
+    /// </summary>
     [Fact]
     public async Task Add_Product_Should_Call_Repository_Add()
     {
         var createProductRequestDto = new CreateProductRequestDto("", null, 10);
 
-        _mockRepository.Setup(repo => repo.AddAsync(It.IsAny<ProductModel>()))
-            .ReturnsAsync((ProductModel p) => p);
+        _mockRepository.Setup(repo => repo.AddAsync(It.IsAny<ProductEntity>()))
+            .ReturnsAsync((ProductEntity p) => p);
 
         _mockValidator.Setup(validator => validator.ValidateAsync(createProductRequestDto, CancellationToken.None))
             .ReturnsAsync(new ValidationResult());
@@ -40,6 +43,6 @@ public class ProductServiceTests
         var result = await _productService.Create(createProductRequestDto);
 
         Assert.NotNull(result);
-        _mockRepository.Verify(repo => repo.AddAsync(It.IsAny<ProductModel>()), Times.Once);
+        _mockRepository.Verify(repo => repo.AddAsync(It.IsAny<ProductEntity>()), Times.Once);
     }
-}*/
+}
